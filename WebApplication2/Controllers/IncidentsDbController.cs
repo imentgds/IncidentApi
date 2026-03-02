@@ -136,5 +136,37 @@ namespace WebApplication2.Controllers
             return Ok(incidents);
         }
 
+        [HttpGet("severity-async/{severity}")]
+        public async Task<ActionResult<IEnumerable<Incident>>> FilterBySeverityAsync(string severity)
+        {
+            var incidents = await _context.Incidents
+                .Where(i => i.severity.Contains(severity))
+                .ToListAsync();
+
+            if (!incidents.Any())
+            {
+                return NotFound($"Aucun incident trouvé avec la gravité contenant '{severity}'");
+            }
+
+            return Ok(incidents);
+        }
+
+
+        [HttpGet("status-async/{status}")]
+        public async Task<ActionResult<IEnumerable<Incident>>> FilterByStatusAsync(string status)
+        {
+            var incidents = await _context.Incidents
+                .Where(i => i.status.Contains(status))
+                .ToListAsync();
+
+            if (!incidents.Any())
+            {
+                return NotFound($"Aucun incident trouvé avec le statut contenant '{status}'");
+            }
+
+            return Ok(incidents);
+        }
+
+
     }
 }
