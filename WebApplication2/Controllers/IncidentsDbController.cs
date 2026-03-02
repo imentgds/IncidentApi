@@ -103,5 +103,38 @@ namespace WebApplication2.Controllers
         {
             return _context.Incidents.Any(e => e.id == id);
         }
+
+
+        [HttpGet("severity/{severity}")]
+        public ActionResult<IEnumerable<Incident>> FilterBySeverity(string severity)
+        {
+            var incidents = _context.Incidents
+                .Where(i => i.severity.Contains(severity))
+                .ToList();
+
+            if (!incidents.Any())
+            {
+                return NotFound($"Aucun incident trouvé avec la gravité contenant '{severity}'");
+            }
+
+            return Ok(incidents);
+        }
+
+
+        [HttpGet("status/{status}")]
+        public ActionResult<IEnumerable<Incident>> FilterByStatus(string status)
+        {
+            var incidents = _context.Incidents
+                .Where(i => i.status.Contains(status))
+                .ToList();
+
+            if (!incidents.Any())
+            {
+                return NotFound($"Aucun incident trouvé avec le statut contenant '{status}'");
+            }
+
+            return Ok(incidents);
+        }
+
     }
 }
