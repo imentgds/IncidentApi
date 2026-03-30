@@ -77,7 +77,10 @@ namespace WebApplication2.Controllers
         [HttpPost]
         public async Task<ActionResult<Incident>> PostIncident(Incident incident)
         {
-            incident.status = " IN PROGRESS";
+
+            incident.status = "OPEN";
+            incident.createdat = DateTime.Now;
+
             _context.Incidents.Add(incident);
             await _context.SaveChangesAsync();
 
@@ -137,5 +140,8 @@ namespace WebApplication2.Controllers
             return Ok(incidents);
         }
 
+        private static readonly string[] AllowedSeverities = { "LOW", "MEDIUM", "HIGH", "CRITICAL" };
+        private static readonly string[] AllowedStatuses = { "OPEN", "IN_PROGRESS", "RESOLVED" };
     }
+
 }
