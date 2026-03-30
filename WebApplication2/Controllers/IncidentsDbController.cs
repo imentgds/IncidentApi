@@ -176,6 +176,7 @@ namespace WebApplication2.Controllers
         }
 
         [HttpPatch("{id}/status")]
+        // ajouter_par_mon_collab 
 public async Task<IActionResult> PutIncidentStatus(int id, string status)
 {
  if (!AllowedStatuses.Contains(status.ToUpper()))
