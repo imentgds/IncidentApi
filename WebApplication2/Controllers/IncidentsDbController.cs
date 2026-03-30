@@ -77,6 +77,7 @@ namespace WebApplication2.Controllers
         [HttpPost]
         public async Task<ActionResult<Incident>> PostIncident(Incident incident)
         {
+            incident.status = " IN PROGRESS";
             _context.Incidents.Add(incident);
             await _context.SaveChangesAsync();
 
