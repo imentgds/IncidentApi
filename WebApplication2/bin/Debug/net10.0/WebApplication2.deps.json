@@ -45,6 +45,7 @@
           "Microsoft.EntityFrameworkCore.SqlServer": "10.0.3",
           "Microsoft.EntityFrameworkCore.Tools": "10.0.3",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "10.0.2",
+          "NuGet.Packaging": "6.12.1",
           "Swashbuckle.AspNetCore": "10.1.1",
           "Microsoft.AspNetCore.Antiforgery": "10.0.0.0",
           "Microsoft.AspNetCore.Authentication.Abstractions": "10.0.0.0",
