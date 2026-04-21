@@ -6786,11 +6786,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\DELL\\Source\\Repos\\WebApplication2\\WebApplication2\\WebApplication2.csproj",
+      "projectUniqueName": "c:\\Users\\DELL\\Source\\Repos\\WebApplication2\\WebApplication2\\WebApplication2.csproj",
       "projectName": "WebApplication2",
-      "projectPath": "C:\\Users\\DELL\\Source\\Repos\\WebApplication2\\WebApplication2\\WebApplication2.csproj",
+      "projectPath": "c:\\Users\\DELL\\Source\\Repos\\WebApplication2\\WebApplication2\\WebApplication2.csproj",
       "packagesPath": "C:\\Users\\DELL\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\DELL\\Source\\Repos\\WebApplication2\\WebApplication2\\obj\\",
+      "outputPath": "c:\\Users\\DELL\\Source\\Repos\\WebApplication2\\WebApplication2\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -6809,7 +6809,6 @@
       },
       "frameworks": {
         "net10.0": {
-          "framework": "net10.0",
           "targetAlias": "net10.0",
           "projectReferences": {}
         }
@@ -6828,7 +6827,6 @@
     },
     "frameworks": {
       "net10.0": {
-        "framework": "net10.0",
         "targetAlias": "net10.0",
         "dependencies": {
           "EF.Core.Repositories.Test.InMemory": {
