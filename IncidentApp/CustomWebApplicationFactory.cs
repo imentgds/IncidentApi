@@ -18,8 +18,10 @@ namespace AppTests
             builder.ConfigureServices(services =>
             {
                 // Supprimer l'ancien DbContext
+                // Le code recherche DbContextOptions<IncidentsDbContext> mais EF Core utilise DbContextOptions<T>
                 var descriptor = services.SingleOrDefault(
-                d => d.ServiceType == typeof(DbContextOptions<IncidentsDbContext>));
+                    d => d.ServiceType == typeof(DbContextOptions<IncidentsDbContext>));
+                
                 if (descriptor != null)
                     services.Remove(descriptor);
                 // Ajouter un DbContext avec BD de test
