@@ -11,7 +11,7 @@ namespace IncidentApp
         {
             var mathematics = new Mathematics();
             var result = mathematics.Sum(3, 10);
-            Assert.Equal(15, result);
+            Assert.Equal(13, result);
         }
         [Fact]
         public void Sum_NegativeAndPositiveNumbers_ReturnsCorrectResult()
