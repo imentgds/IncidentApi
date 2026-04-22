@@ -9,15 +9,22 @@ jobs:
     runs-on: windows-latest
     steps:
     - name: Checkout code
-      uses: actions/checkout@v5 
+      uses: actions/checkout@v4 
     - name: Setup .NET
-      uses: actions/setup-dotnet@v5
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.0.x'
+    - name: Clear NuGet cache (optionnel)
+      run: dotnet nuget locals all --clear
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore --force-evaluate
     - name: Build project
-      run: dotnet build --no-restore
+      run: dotnet build --no-restore --configuration Release
     - name: Run tests
-      run: dotnet test --no-build --verbosity normal 
-    
+      run: dotnet test --no-build --verbosity normal --logger "trx;LogFileName=TestResults.trx"
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results
+        path: **/TestResults.trx

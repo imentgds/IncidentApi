@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using WebApplication2.Controllers;
 using WebApplication2.model;
+using Xunit;
 
 namespace AppTests
 {

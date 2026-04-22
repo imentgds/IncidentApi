@@ -1,4 +1,5 @@
 ﻿using WebApplication2.Classes;
+using Xunit;
 
 public class FactorialTests
 {
