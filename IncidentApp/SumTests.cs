@@ -10,7 +10,7 @@ namespace IncidentApp
         public void Sum_PositiveNumbers_ReturnsCorrectResult()
         {
             var mathematics = new Mathematics();
-            var result = mathematics.Sum(5, 10);
+            var result = mathematics.Sum(3, 10);
             Assert.Equal(15, result);
         }
         [Fact]
