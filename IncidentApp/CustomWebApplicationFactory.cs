@@ -26,9 +26,10 @@ namespace AppTests
                     services.Remove(descriptor);
                 // Ajouter un DbContext avec BD de test
                 services.AddDbContext<IncidentsDbContext>(options =>
-               options.UseSqlServer("Server = (localdb)\\mssqllocaldb; Database = IncidentDb_Test; Trusted_Connection = True; TrustServerCertificate = True; "));
-            // Construire le provider
- var sp = services.BuildServiceProvider();
+                {
+                    options.UseInMemoryDatabase("TestDatabase");
+                }); // Construire le provider
+                var sp = services.BuildServiceProvider();
                 // Initialiser la BD
                 using (var scope = sp.CreateScope())
                 {
