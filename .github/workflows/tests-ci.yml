@@ -1,3 +1,4 @@
+
 name: .NET CI Pipeline
 on:
   push:
@@ -7,63 +8,34 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-    
     services:
-      sql-server:
+      sqlserver:
         image: mcr.microsoft.com/mssql/server:2022-latest
         env:
           ACCEPT_EULA: "Y"
-          SA_PASSWORD: "Your_password123!"
-          MSSQL_PID: "Express"
+          SA_PASSWORD: "My_password123"
         ports:
-          - 1433:1433
-        options: >-
-          --health-cmd "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'Your_password123!' -Q 'SELECT 1' || exit 1"
-          --health-interval 10s
-          --health-timeout 3s
-          --health-retries 10
-    
+          - 1433:1433 
     steps:
     - name: Checkout code
       uses: actions/checkout@v4 
-      
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.0.x'
-    
-    - name: Wait for SQL Server to be ready
-      run: |
-        echo "Waiting for SQL Server to be ready..."
-        for i in {1..30}; do
-          if /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'Your_password123!' -Q "SELECT 1" &> /dev/null; then
-            echo "SQL Server is ready!"
-            break
-          fi
-          echo "Waiting... attempt $i"
-          sleep 2
-        done
-    
-    - name: Update connection string
-      run: |
-        # Remplacer la chaîne de connexion LocalDB par SQL Server
-        find . -name "appsettings*.json" -type f -exec sed -i 's/Server=(localdb)\\mssqllocaldb/Server=localhost,1433/g' {} \;
-        find . -name "appsettings*.json" -type f -exec sed -i 's/Trusted_Connection=True/User Id=sa;Password=Your_password123!;TrustServerCertificate=True/g' {} \;
-    
+
     - name: Restore dependencies
       run: dotnet restore --force-evaluate
-      
     - name: Build project
       run: dotnet build --no-restore 
-      
     - name: Run tests
-      run: dotnet test --no-build --verbosity normal --logger "trx;LogFileName=TestResults.trx"
       env:
-        # Option: Utiliser une variable d'environnement pour la chaîne de connexion
-        ConnectionStrings__DefaultConnection: "Server=localhost,1433;User Id=sa;Password=Your_password123!;Database=IncidentDb;TrustServerCertificate=True"
-    
+        ConnectionStrings__IncidentsConnection:
+          "Server=localhost,1433;Database=IncidentsDb;User Id=sa;My_password123;TrustServerCertificate=True;" 
+      run: dotnet test --no-build --verbosity normal --logger "trx;LogFileName=TestResults.trx" 
     - name: Upload test report
       uses: actions/upload-artifact@v4
       with:
         name: test-report
         path: '**/TestResults.trx'
+

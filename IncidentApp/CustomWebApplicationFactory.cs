@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace AppTests
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             builder.UseEnvironment("Testing");
-            builder.ConfigureServices(services =>
+            builder.ConfigureServices((context, services)  =>
             {
                 // Supprimer l'ancien DbContext
                 // Le code recherche DbContextOptions<IncidentsDbContext> mais EF Core utilise DbContextOptions<T>
@@ -24,9 +25,17 @@ namespace AppTests
                 
                 if (descriptor != null)
                     services.Remove(descriptor);
-                // Ajouter un DbContext avec BD de test
+
+                    // Récupérer la config
+                    var configuration = context.Configuration;
+            var connectionString =configuration.GetConnectionString("IncidentsConnection");
+ // Ajouter le DbContext avec la bonne connexion
+ services.AddDbContext<IncidentsDbContext>(options =>
+ options.UseSqlServer(connectionString));
+                /* Ajouter un DbContext avec BD de test
                 services.AddDbContext<IncidentsDbContext>(options =>
                options.UseSqlServer("Server = (localdb)\\mssqllocaldb; Database = IncidentDb_Test; Trusted_Connection = True; TrustServerCertificate = True; "));
+            */
             // Construire le provider
  var sp = services.BuildServiceProvider();
                 // Initialiser la BD
