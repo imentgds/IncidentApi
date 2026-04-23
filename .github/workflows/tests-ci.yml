@@ -1,4 +1,3 @@
-
 name: .NET CI Pipeline
 on:
   push:
@@ -13,12 +12,19 @@ jobs:
         image: mcr.microsoft.com/mssql/server:2022-latest
         env:
           ACCEPT_EULA: "Y"
-          SA_PASSWORD: "My_password123"
+          SA_PASSWORD: "YourStrong!Password123"
         ports:
-          - 1433:1433 
+          - 1433:1433
+        options: >-
+          --health-cmd "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P YourStrong!Password123 -Q 'SELECT 1'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4 
+      uses: actions/checkout@v4
+      
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
@@ -26,16 +32,31 @@ jobs:
 
     - name: Restore dependencies
       run: dotnet restore --force-evaluate
+      
     - name: Build project
-      run: dotnet build --no-restore 
+      run: dotnet build --no-restore --configuration Release
+      
+    - name: Wait for SQL Server
+      run: |
+        echo "Waiting for SQL Server to be ready..."
+        for i in {1..30}; do
+          if /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P YourStrong!Password123 -Q "SELECT 1" &> /dev/null; then
+            echo "SQL Server is ready!"
+            exit 0
+          fi
+          echo "Attempt $i: SQL Server not ready yet..."
+          sleep 3
+        done
+        echo "SQL Server failed to start"
+        exit 1
+        
     - name: Run tests
       env:
-        ConnectionStrings__IncidentsConnection:ConnectionStrings__IncidentsConnection:
-           "Server=localhost,1433;Database=IncidentsDb;User Id=sa;Password=My_password123;TrustServerCertificate=True;" 
-      run: dotnet test --no-build --verbosity normal --logger "trx;LogFileName=TestResults.trx" 
+        ConnectionStrings__IncidentsConnection: "Server=localhost;Database=IncidentsDb;User Id=sa;Password=YourStrong!Password123;TrustServerCertificate=True;"
+      run: dotnet test --no-build --configuration Release --verbosity normal --logger "trx;LogFileName=TestResults.trx"
+      
     - name: Upload test report
       uses: actions/upload-artifact@v4
       with:
         name: test-report
         path: '**/TestResults.trx'
-

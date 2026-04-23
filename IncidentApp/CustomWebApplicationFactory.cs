@@ -10,36 +10,50 @@ namespace AppTests
 {
     public class CustomWebApplicationFactory : WebApplicationFactory<Program>
     {
-        protected override void ConfigureWebHost(IWebHostBuilder builder)
+        public class CustomWebApplicationFactory : WebApplicationFactory<Program>
         {
-            builder.UseEnvironment("Testing");
-            builder.ConfigureServices((context, services) =>
+            protected override void ConfigureWebHost(IWebHostBuilder builder)
             {
-                // Supprimer l'ancien DbContext
-                var descriptor = services.SingleOrDefault(
-                d => d.ServiceType ==
-               typeof(DbContextOptions<IncidentsDbContext>));
-                if (descriptor != null)
-                    services.Remove(descriptor);
-
-                // Récupérer la config
-                var configuration = context.Configuration;
-                var connectionString =
-               configuration.GetConnectionString("IncidentsConnection");
-                // Ajouter le DbContext avec la bonne connexion
-                services.AddDbContext<IncidentsDbContext>(options =>
-                options.UseSqlServer(connectionString));
-                // Construire le provider
-                var sp = services.BuildServiceProvider();
-                // Initialiser la BD
-                using (var scope = sp.CreateScope())
+                builder.UseEnvironment("Testing");
+                builder.ConfigureServices((context, services) =>
                 {
-                    var db =
-                   scope.ServiceProvider.GetRequiredService<IncidentsDbContext>();
-                    db.Database.EnsureDeleted();
-                    db.Database.EnsureCreated();
-                }
-            });
+                    // Remove existing DbContext registration
+                    var descriptor = services.SingleOrDefault(
+                        d => d.ServiceType == typeof(DbContextOptions<IncidentsDbContext>));
+
+                    if (descriptor != null)
+                        services.Remove(descriptor);
+
+                    // Get connection string from environment
+                    var configuration = context.Configuration;
+                    var connectionString = configuration.GetConnectionString("IncidentsConnection");
+
+                    // Check if connection string exists and is not LocalDB
+                    if (string.IsNullOrEmpty(connectionString) || connectionString.Contains("localdb", StringComparison.OrdinalIgnoreCase))
+                    {
+                        // Fallback to In-Memory for safety
+                        services.AddDbContext<IncidentsDbContext>(options =>
+                            options.UseInMemoryDatabase("TestDatabase"));
+                    }
+                    else
+                    {
+                        // Use SQL Server
+                        services.AddDbContext<IncidentsDbContext>(options =>
+                            options.UseSqlServer(connectionString));
+                    }
+
+                    // Build service provider
+                    var sp = services.BuildServiceProvider();
+
+                    // Initialize database
+                    using (var scope = sp.CreateScope())
+                    {
+                        var db = scope.ServiceProvider.GetRequiredService<IncidentsDbContext>();
+                        db.Database.EnsureDeleted();
+                        db.Database.EnsureCreated();
+                    }
+                });
+            }
         }
     }
-}
+    }
