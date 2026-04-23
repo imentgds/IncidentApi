@@ -15,28 +15,27 @@ namespace AppTests
             builder.UseEnvironment("Testing");
             builder.ConfigureServices((context, services) =>
             {
-                // Remove existing DbContext registration
+                // Supprimer l'ancien DbContext
                 var descriptor = services.SingleOrDefault(
-                    d => d.ServiceType == typeof(DbContextOptions<IncidentsDbContext>));
-
+                d => d.ServiceType ==
+               typeof(DbContextOptions<IncidentsDbContext>));
                 if (descriptor != null)
                     services.Remove(descriptor);
 
-                // Get connection string from configuration
+                // Récupérer la config
                 var configuration = context.Configuration;
-                var connectionString = configuration.GetConnectionString("IncidentsConnection");
-
-                // Add DbContext with test database
+                var connectionString =
+               configuration.GetConnectionString("IncidentsConnection");
+                // Ajouter le DbContext avec la bonne connexion
                 services.AddDbContext<IncidentsDbContext>(options =>
-                    options.UseSqlServer(connectionString));
-
-                // Build service provider
+                options.UseSqlServer(connectionString));
+                // Construire le provider
                 var sp = services.BuildServiceProvider();
-
-                // Initialize database
+                // Initialiser la BD
                 using (var scope = sp.CreateScope())
                 {
-                    var db = scope.ServiceProvider.GetRequiredService<IncidentsDbContext>();
+                    var db =
+                   scope.ServiceProvider.GetRequiredService<IncidentsDbContext>();
                     db.Database.EnsureDeleted();
                     db.Database.EnsureCreated();
                 }
