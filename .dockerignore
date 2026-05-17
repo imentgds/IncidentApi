@@ -1,0 +1,15 @@
+# Build
+bin/
+obj/
+# Git
+.git
+.gitignore
+# VS
+.vs/
+*.user
+*.suo
+# Logs
+*.log
+# Docker
+Dockerfile
+.dockerignore

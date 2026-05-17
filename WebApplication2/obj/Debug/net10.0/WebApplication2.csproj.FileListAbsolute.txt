@@ -589,3 +589,5 @@ C:\Users\DELL\Source\Repos\WebApplication2\WebApplication2\bin\Debug\net10.0\ref
 C:\Users\DELL\Source\Repos\WebApplication2\WebApplication2\bin\Debug\net10.0\Microsoft.AspNetCore.Mvc.Testing.dll
 C:\Users\DELL\Source\Repos\WebApplication2\WebApplication2\bin\Debug\net10.0\Microsoft.AspNetCore.TestHost.dll
 C:\Users\DELL\Source\Repos\WebApplication2\WebApplication2\obj\Debug\net10.0\MvcTestingAppManifest.json
+C:\Users\DELL\Source\Repos\WebApplication2\WebApplication2\bin\Debug\net10.0\EntityFramework.SqlServer.dll
+C:\Users\DELL\Source\Repos\WebApplication2\WebApplication2\bin\Debug\net10.0\EntityFramework.dll
